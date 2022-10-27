@@ -20,7 +20,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         User user = userRepository.findFirstByUsernameOrEmailOrMobile(username,username,username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found for the username: " + username));
 
-        return UserDetailsImpl.build(user);
+        return UserPrincipal.build(user);
     }
 
 }

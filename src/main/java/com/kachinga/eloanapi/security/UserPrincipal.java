@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private final Long id;
@@ -25,7 +25,7 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -33,13 +33,13 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(User user) {
+    public static UserPrincipal build(User user) {
         List<GrantedAuthority> authorities;
         authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
 
-        return new UserDetailsImpl(
+        return new UserPrincipal(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
@@ -94,7 +94,7 @@ public class UserDetailsImpl implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDetailsImpl that = (UserDetailsImpl) o;
+        UserPrincipal that = (UserPrincipal) o;
         return Objects.equals(id, that.id);
     }
 

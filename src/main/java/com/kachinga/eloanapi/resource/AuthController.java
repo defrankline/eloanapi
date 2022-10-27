@@ -6,11 +6,10 @@ import com.kachinga.eloanapi.domain.payload.JwtResponse;
 import com.kachinga.eloanapi.domain.payload.LoginRequest;
 import com.kachinga.eloanapi.domain.payload.RegisterRequest;
 import com.kachinga.eloanapi.security.JwtUtils;
-import com.kachinga.eloanapi.security.UserDetailsImpl;
+import com.kachinga.eloanapi.security.UserPrincipal;
 import com.kachinga.eloanapi.service.UserService;
 import com.kachinga.eloanapi.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -45,7 +43,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtToken = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
