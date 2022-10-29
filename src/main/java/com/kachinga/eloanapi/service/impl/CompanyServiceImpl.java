@@ -2,6 +2,9 @@ package com.kachinga.eloanapi.service.impl;
 
 import com.kachinga.eloanapi.domain.Company;
 import com.kachinga.eloanapi.repository.CompanyRepository;
+import com.kachinga.eloanapi.repository.specs.CompanySpecification;
+import com.kachinga.eloanapi.repository.specs.SearchCriteria;
+import com.kachinga.eloanapi.repository.specs.SearchOperation;
 import com.kachinga.eloanapi.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,7 +47,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<Company> findAll(String query) {
-        return repository.findAllByNameLikeOrNumberLike(query.toLowerCase(Locale.ENGLISH), query.toLowerCase(Locale.ENGLISH));
+        CompanySpecification specs = new CompanySpecification();
+        specs.add(new SearchCriteria("name", query.toLowerCase(), SearchOperation.MATCH));
+        return repository.findAll(specs);
     }
 
     @Override

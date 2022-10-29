@@ -75,6 +75,17 @@ public class CompanyController {
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable("id") Long id) {
+        Company optionalCompany = companyService.findById(id);
+        if (optionalCompany == null) {
+            ApiResponse<?> response = new ApiResponse<>("Company not found", id);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+        ApiResponse<?> response = new ApiResponse<>("Company", optionalCompany);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         Company optionalCompany = companyService.findById(id);
