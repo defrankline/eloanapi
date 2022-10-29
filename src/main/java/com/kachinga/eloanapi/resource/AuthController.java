@@ -10,6 +10,7 @@ import com.kachinga.eloanapi.security.UserPrincipal;
 import com.kachinga.eloanapi.service.UserService;
 import com.kachinga.eloanapi.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,24 +36,28 @@ public class AuthController {
 
     private final UserService userService;
 
+    @Value("${app.jwtExpirationInMs}")
+    private int jwtExpiration;
+
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
+        Date expiration = new Date((new Date()).getTime() + jwtExpiration);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
+        String jwtToken = jwtUtils.generateJwtToken(authentication, expiration);
 
         UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwtToken,
+        return ResponseEntity.ok(new JwtResponse(jwtToken, expiration,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
+                userDetails.getCompany(),
                 roles));
     }
 

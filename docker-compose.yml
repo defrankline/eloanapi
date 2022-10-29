@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.11.2-management
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBIT_DEFAULT_USER: "guest"
+      RABBIT_DEFAULT_PASS: "guest"
+      RABBIT_DEFAULT_VHOST: "/"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    container_name: eloanapi-rabbitmq
+    volumes:
+      - ./rabbimq-data:/var/lib/data
+      - ./rabbimq-data/logs:/var/log/data
+    networks:
+      - eloanapinet
+
+  postgres-db:
+    image: postgres:11
+    container_name: eloanapi-db
+    expose:
+      - "5432"
+    restart: unless-stopped
+    environment:
+      - JVM_OPTS=-Xmx4g -Xms4g -XX:MaxPermSize=2048m
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=frank
+      - POSTGRES_DB=eloanapi
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - eloanapinet
+
+  app-server:
+    container_name: eloanapi-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - JVM_OPTS=-Xmx6g -Xms6g -XX:MaxPermSize=3072m
+      - JAVA_HEAP_SIZE_MB=3072
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/eloanapi
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=frank
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+    depends_on:
+      - postgres-db
+      - rabbitmq
+    volumes:
+      - server-data:/var/lib/server/data
+    networks:
+      - eloanapinet
+
+volumes:
+  db-data:
+  server-data:
+  rabbimq-data:
+networks:
+  eloanapinet:
+    driver: "bridge"

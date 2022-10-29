@@ -21,6 +21,9 @@ public class User extends AuditModel {
     @Column(name = "number", nullable = false)
     private String number;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -29,7 +32,7 @@ public class User extends AuditModel {
 
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 

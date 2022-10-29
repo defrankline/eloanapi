@@ -14,8 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest implements Serializable {
+    private Long id;
+
     @NotNull(message = "email is required")
     private String email;
+
+    @NotNull(message = "name is required")
+    private String name;
 
     @NotNull(message = "username is required")
     private String username;

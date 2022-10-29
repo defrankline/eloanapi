@@ -16,17 +16,14 @@ public class JwtUtils {
     @Value("${app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${app.jwtExpirationInMs}")
-    private int jwtExpiration;
-
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(Authentication authentication, Date expiration) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
+                .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

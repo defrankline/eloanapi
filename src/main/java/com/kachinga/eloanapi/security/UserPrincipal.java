@@ -1,6 +1,7 @@
 package com.kachinga.eloanapi.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kachinga.eloanapi.domain.Company;
 import com.kachinga.eloanapi.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,15 +21,18 @@ public class UserPrincipal implements UserDetails {
 
     private final String email;
 
+    private final Company company;
+
     @JsonIgnore
     private final String password;
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String username, String email, Company company, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.company = company;
         this.password = password;
         this.authorities = authorities;
     }
@@ -43,6 +47,7 @@ public class UserPrincipal implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getCompany(),
                 user.getPassword(),
                 authorities);
     }
@@ -53,6 +58,10 @@ public class UserPrincipal implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public Company getCompany() {
+        return company;
     }
 
     @Override
