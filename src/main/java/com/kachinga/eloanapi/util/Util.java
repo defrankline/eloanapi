@@ -1,13 +1,16 @@
 package com.kachinga.eloanapi.util;
 
+import com.kachinga.eloanapi.domain.payload.ApiResponse;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-public final class RandomUtil {
+public final class Util {
     private static final String NUMERIC_STRING = "0123456789";
 
     private static final int DEF_COUNT = 20;
 
-    private RandomUtil() {
+    private Util() {
     }
 
     public static String generatePassword() {
@@ -54,4 +57,25 @@ public final class RandomUtil {
         }
         return builder.toString();
     }
+
+    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data, String message, HttpStatus httpStatus) {
+        ApiResponse<?> response = new ApiResponse<>(message, data);
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data) {
+        ApiResponse<?> response = new ApiResponse<>("Data", data);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data, String message) {
+        ApiResponse<?> response = new ApiResponse<>(message, data);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data, HttpStatus httpStatus) {
+        ApiResponse<?> response = new ApiResponse<>("Data", data);
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
 }

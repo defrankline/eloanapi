@@ -1,7 +1,7 @@
 package com.kachinga.eloanapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kachinga.eloanapi.util.RandomUtil;
+import com.kachinga.eloanapi.util.Util;
 import lombok.*;
 
 import javax.persistence.*;
@@ -55,7 +55,7 @@ public class Stock extends AuditModel {
     private String receiptNumber;
 
     @Column(name = "reference_number")
-    private String referenceNumber = RandomUtil.randomNumeric(32);
+    private String referenceNumber = Util.randomNumeric(32);
 
     @Column(name = "verified")
     private boolean verified = false;

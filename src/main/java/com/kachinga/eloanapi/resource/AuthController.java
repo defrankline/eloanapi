@@ -8,7 +8,7 @@ import com.kachinga.eloanapi.domain.payload.RegisterRequest;
 import com.kachinga.eloanapi.security.JwtUtils;
 import com.kachinga.eloanapi.security.UserPrincipal;
 import com.kachinga.eloanapi.service.UserService;
-import com.kachinga.eloanapi.util.RandomUtil;
+import com.kachinga.eloanapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -65,7 +65,7 @@ public class AuthController {
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) throws ParseException {
         String password = registerRequest.getPassword();
         String username = registerRequest.getUsername();
-        String number = registerRequest.getNumber() != null ? registerRequest.getNumber() : RandomUtil.generateContractNumber();
+        String number = registerRequest.getNumber() != null ? registerRequest.getNumber() : Util.generateContractNumber();
         User row = userService.findByNumberAndCompanyId(registerRequest.getNumber(), registerRequest.getCompany().getId());
         if (row != null) {
             ApiResponse<?> response = new ApiResponse<>("User already exist!", registerRequest);
