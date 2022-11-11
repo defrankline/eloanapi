@@ -68,7 +68,11 @@ public class CompanyServiceImpl implements CompanyService {
         if (direction.equals("DESC")) {
             dir = Sort.Direction.DESC;
         }
+
+        CompanySpecification specs = new CompanySpecification();
+        specs.add(new SearchCriteria("name", query.toLowerCase(Locale.ENGLISH), SearchOperation.MATCH));
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(dir, sortBy));
-        return repository.findAllByNameLikeOrNumberLike(query.toLowerCase(Locale.ENGLISH), query.toLowerCase(Locale.ENGLISH), pageable);
+        return repository.findAll(specs, pageable);
     }
 }
