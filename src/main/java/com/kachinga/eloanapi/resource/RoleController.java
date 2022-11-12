@@ -5,6 +5,7 @@ import com.kachinga.eloanapi.domain.payload.ApiResponse;
 import com.kachinga.eloanapi.security.CurrentUser;
 import com.kachinga.eloanapi.security.UserPrincipal;
 import com.kachinga.eloanapi.service.RoleService;
+import com.kachinga.eloanapi.util.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -20,21 +22,25 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @Slf4j
 public class RoleController {
-
-
     private final RoleService roleService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll(@CurrentUser UserPrincipal currentUser) {
-        log.info(currentUser.getUsername() + " requesting roles");
-        ApiResponse<?> response = new ApiResponse<>("Roles", roleService.findAll());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<?> create(@Valid @RequestBody Role role) {
+        return roleService.create(role);
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody Role role) throws ParseException {
-        Role created = roleService.save(role);
-        ApiResponse<?> response = new ApiResponse<>("Role Created Successfully", created);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return roleService.getAll();
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<?> update(@PathVariable("uuid") UUID uuid, @Valid @RequestBody Role role) {
+        return roleService.update(uuid, role);
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> delete(@PathVariable("uuid") UUID uuid) {
+        return roleService.destroy(uuid);
     }
 }

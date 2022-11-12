@@ -58,23 +58,28 @@ public final class Util {
         return builder.toString();
     }
 
-    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data, String message, HttpStatus httpStatus) {
+    public static ResponseEntity<? extends ApiResponse<?>> respond(Object data, String message, HttpStatus httpStatus) {
         ApiResponse<?> response = new ApiResponse<>(message, data);
         return new ResponseEntity<>(response, httpStatus);
     }
 
-    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data) {
+    public static ResponseEntity<? extends ApiResponse<?>> respond(Object data) {
         ApiResponse<?> response = new ApiResponse<>("Data", data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data, String message) {
+    public static ResponseEntity<? extends ApiResponse<?>> respond(Object data, String message) {
         ApiResponse<?> response = new ApiResponse<>(message, data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    private static ResponseEntity<? extends ApiResponse<?>> respond(Object data, HttpStatus httpStatus) {
+    public static ResponseEntity<? extends ApiResponse<?>> respond(Object data, HttpStatus httpStatus) {
         ApiResponse<?> response = new ApiResponse<>("Data", data);
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    public static ResponseEntity<? extends ApiResponse<?>> respond(String message, HttpStatus httpStatus) {
+        ApiResponse<?> response = new ApiResponse<>(message);
         return new ResponseEntity<>(response, httpStatus);
     }
 

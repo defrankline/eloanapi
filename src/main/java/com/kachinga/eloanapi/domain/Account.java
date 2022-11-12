@@ -31,7 +31,4 @@ public class Account extends AuditModel {
 
     @Column(name = "balance")
     private BigDecimal balance = BigDecimal.ZERO;
-
-    @Column(name = "active")
-    private boolean active = true;
 }
